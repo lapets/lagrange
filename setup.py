@@ -4,7 +4,7 @@ setup(
     name             = 'lagrange',
     version          = '0.1.0.0',
     packages         = ['lagrange',],
-    install_requires = ['egcd',],
+    install_requires = [],
     license          = 'MIT',
     url              = 'https://github.com/lapets/lagrange',
     author           = 'Andrei Lapets',
