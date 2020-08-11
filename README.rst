@@ -4,7 +4,7 @@ lagrange
 
 Python library with a basic native implementation of Lagrange interpolation over finite fields.
 
-|pypi| |travis|
+|pypi| |travis| |coveralls|
 
 .. |pypi| image:: https://badge.fury.io/py/lagrange.svg
    :target: https://badge.fury.io/py/lagrange
@@ -12,6 +12,9 @@ Python library with a basic native implementation of Lagrange interpolation over
 
 .. |travis| image:: https://travis-ci.com/lapets/lagrange.svg?branch=master
     :target: https://travis-ci.com/lapets/lagrange
+
+.. |coveralls| image:: https://coveralls.io/repos/github/lapets/lagrange/badge.svg?branch=master
+   :target: https://coveralls.io/github/lapets/lagrange?branch=master
 
 Purpose
 -------
