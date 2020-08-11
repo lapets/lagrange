@@ -1,2 +1,2 @@
-# Allow users to share and rebuild values.
+"""Allow users to access functions directly."""
 from lagrange.lagrange import lagrange, interpolate

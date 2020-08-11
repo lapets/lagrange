@@ -47,3 +47,13 @@ Interpolation can be performed on points represented in a variety of ways::
          558333, 12198248, 7344866, 10114014, 2239291, 2515398],\
         15485867)
     123
+
+Testing and Conventions
+-----------------------
+All unit tests are included in the module itself and can be executed using `doctest <https://docs.python.org/3/library/doctest.html>`_::
+
+    python lagrange/lagrange.py -v
+
+Style conventions are enforced using `Pylint <https://www.pylint.org/>`_::
+
+    pylint lagrange
