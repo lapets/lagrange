@@ -77,4 +77,4 @@ def interpolate(points, prime):
 lagrange = interpolate # Synonym.
 
 if __name__ == "__main__":
-    doctest.testmod()
+    doctest.testmod() # pragma: no cover
