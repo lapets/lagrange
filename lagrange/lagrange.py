@@ -42,6 +42,18 @@ def interpolate(points, prime):
          558333, 12198248, 7344866, 10114014, 2239291, 2515398],\
         15485867)
     123
+    >>> interpolate('abc', 123)
+    Traceback (most recent call last):
+      ...
+    TypeError: expecting a list of values, list of points, or a dictionary
+    >>> interpolate([15, 9, 3], 'abc')
+    Traceback (most recent call last):
+      ...
+    ValueError: expecting an integer prime modulus
+    >>> interpolate([15, 9, 3], -17)
+    Traceback (most recent call last):
+      ...
+    ValueError: expecting a positive integer prime modulus
     """
     if isinstance(points, list) and all([isinstance(p, int) for p in points]):
         points = dict(zip(range(1, len(points) + 1), points))
@@ -54,11 +66,11 @@ def interpolate(points, prime):
     else:
         raise TypeError("expecting a list of values, list of points, or a dictionary")
 
-    if not isinstance(prime, int) or prime <= 1:
+    if not isinstance(prime, int):
         raise ValueError("expecting an integer prime modulus")
 
     if prime <= 1:
-        raise ValueError("expecting a positive prime modulus")
+        raise ValueError("expecting a positive integer prime modulus")
 
     # Compute the Langrange coefficients at 0.
     coefficients = {}
