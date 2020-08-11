@@ -4,11 +4,14 @@ lagrange
 
 Python library with a basic native implementation of Lagrange interpolation over finite fields.
 
-|pypi|
+|pypi| |travis|
 
 .. |pypi| image:: https://badge.fury.io/py/lagrange.svg
    :target: https://badge.fury.io/py/lagrange
    :alt: PyPI version and link.
+
+.. |travis| image:: https://travis-ci.com/lapets/lagrange.svg?branch=master
+    :target: https://travis-ci.com/lapets/lagrange
 
 Purpose
 -------
