@@ -38,15 +38,11 @@ The library can be imported in the usual way::
 
 Examples
 --------
-Interpolation can be performed on points represented in a variety of ways::
+Interpolation can be performed on collections of points represented in a variety of ways::
 
     >>> lagrange({1: 15, 2: 9, 3: 3}, 17)
     4
-    >>> lagrange([(1,15), (2,9), (3,3)], 17)
-    4
-    >>> lagrange(((1,15), (2,9), (3,3)), 17)
-    4
-    >>> lagrange({(1,15), (2,9), (3,3)}, 17)
+    >>> lagrange([(1, 15), (2, 9), (3, 3)], 17)
     4
     >>> lagrange([15, 9, 3], 17)
     4
