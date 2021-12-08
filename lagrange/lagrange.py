@@ -53,11 +53,11 @@ def interpolate(points, prime):
       ...
     ValueError: expecting a positive integer prime modulus
     """
-    if isinstance(points, list) and all([isinstance(p, int) for p in points]):
+    if isinstance(points, list) and all(isinstance(p, int) for p in points):
         points = dict(zip(range(1, len(points) + 1), points))
     elif isinstance(points, (list, set, tuple)) and\
        len(points) > 0 and\
-       all([isinstance(p, (list, tuple)) and len(p) == 2 for p in points]):
+       all(isinstance(p, (list, tuple)) and len(p) == 2 for p in points):
         points = dict([tuple(p) for p in points])
     elif isinstance(points, dict):
         pass
