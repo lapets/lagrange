@@ -24,7 +24,7 @@ Library with a basic, pure Python implementation of Lagrange interpolation over 
 
 Purpose
 -------
-Pure Python implementation of the Lagrange interpolation algorithm over finite fields.
+Pure Python implementation of the `Lagrange interpolation <https://en.wikipedia.org/wiki/Lagrange_polynomial>`__ algorithm over finite fields.
 
 Package Installation and Usage
 ------------------------------
