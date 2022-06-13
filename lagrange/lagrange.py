@@ -1,6 +1,5 @@
 """
-Python library with a basic native implementation of Lagrange
-interpolation over finite fields.
+Pure-Python implementation of Lagrange interpolation over finite fields.
 """
 from __future__ import annotations
 from typing import Union

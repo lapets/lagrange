@@ -2,7 +2,7 @@
 lagrange
 ========
 
-Library with a basic, pure Python implementation of Lagrange interpolation over finite fields.
+Pure-Python implementation of Lagrange interpolation over finite fields.
 
 |pypi| |readthedocs| |actions| |coveralls|
 
