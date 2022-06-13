@@ -18,8 +18,8 @@ Library with a basic, pure Python implementation of Lagrange interpolation over 
    :target: https://github.com/lapets/lagrange/actions/workflows/lint-test-cover-docs.yml
    :alt: GitHub Actions status.
 
-.. |coveralls| image:: https://coveralls.io/repos/github/lapets/lagrange/badge.svg?branch=master
-   :target: https://coveralls.io/github/lapets/lagrange?branch=master
+.. |coveralls| image:: https://coveralls.io/repos/github/lapets/lagrange/badge.svg?branch=main
+   :target: https://coveralls.io/github/lapets/lagrange?branch=main
    :alt: Coveralls test coverage summary.
 
 Purpose
@@ -28,7 +28,7 @@ Pure Python implementation of the Lagrange interpolation algorithm over finite f
 
 Package Installation and Usage
 ------------------------------
-The package is available on `PyPI <https://pypi.org/project/lagrange/>`_::
+This library is available as a `package on PyPI <https://pypi.org/project/lagrange>`__::
 
     python -m pip install lagrange
 
@@ -68,7 +68,7 @@ Documentation
 ^^^^^^^^^^^^^
 .. include:: toc.rst
 
-The documentation can be generated automatically from the source files using `Sphinx <https://www.sphinx-doc.org/>`_::
+The documentation can be generated automatically from the source files using `Sphinx <https://www.sphinx-doc.org>`__::
 
     python -m pip install .[docs]
     cd docs
@@ -81,22 +81,22 @@ All unit tests are executed and their coverage is measured when using `pytest <h
     python -m pip install .[test]
     nosetests --cover-erase
 
-Alternatively, all unit tests are included in the module itself and can be executed using `doctest <https://docs.python.org/3/library/doctest.html>`_::
+Alternatively, all unit tests are included in the module itself and can be executed using `doctest <https://docs.python.org/3/library/doctest.html>`__::
 
     python lagrange/lagrange.py -v
 
-Style conventions are enforced using `Pylint <https://www.pylint.org/>`_::
+Style conventions are enforced using `Pylint <https://www.pylint.org>`__::
 
     python -m pip install .[lint]
     pylint lagrange
 
 Contributions
 ^^^^^^^^^^^^^
-In order to contribute to the source code, open an issue or submit a pull request on the `GitHub page <https://github.com/lapets/lagrange>`_ for this library.
+In order to contribute to the source code, open an issue or submit a pull request on the `GitHub page <https://github.com/lapets/lagrange>`__ for this library.
 
 Versioning
 ^^^^^^^^^^
-Beginning with version 0.2.0, the version number format for this library and the changes to the library associated with version number increments conform with `Semantic Versioning 2.0.0 <https://semver.org/#semantic-versioning-200>`_.
+Beginning with version 0.2.0, the version number format for this library and the changes to the library associated with version number increments conform with `Semantic Versioning 2.0.0 <https://semver.org/#semantic-versioning-200>`__.
 
 Publishing
 ^^^^^^^^^^
