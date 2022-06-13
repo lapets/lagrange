@@ -57,16 +57,17 @@ def interpolate(
     .. |Sequence| replace:: ``Sequence``
     .. _Sequence: https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence
 
-    If the point information is supplied as an |Iterable| of integers, that iterable
-    must be a |Sequence|_.
+    If the point information is supplied as an |Iterable|_ of integers, that
+    iterable object must be a |Sequence|_.
 
     >>> interpolate({15, 9, 3}, 17)
     Traceback (most recent call last):
       ...
     TypeError: iterable of integers that represents points must be a sequence
 
-    Alternatively, a two-coordinate |Sequence|_ can be used to represent each individual point.
-    In that case, any |Iterable|_ of such individual points is supported.
+    Alternatively, a two-coordinate |Sequence|_ can be used to represent each
+    individual point. In that case, any |Iterable|_ of such individual points
+    is supported.
 
     >>> interpolate({(1, 15), (2, 9), (3, 3)}, 17)
     4
