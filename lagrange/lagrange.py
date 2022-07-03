@@ -98,6 +98,10 @@ def interpolate(
     >>> lagrange({5: 64, 2: 25, 3: 36}, degree=2, prime=65537)
     9
 
+    Trivial interpolation is allowed as well.
+    >>> lagrange([12345], degree=0, prime=65537)
+    12345
+
     At least one point must be supplied.
 
     >>> interpolate([], 17)
@@ -203,7 +207,7 @@ sequences of integers
             # Extrapolate given that y=1 if x=`x_value` and y=0 for other known x in domain.
             div((0 - known_x), (x_value - known_x))
             for known_x in domain if known_x is not x_value
-        )))
+        ), 1))
         for x_value in domain
     ) % prime
 
