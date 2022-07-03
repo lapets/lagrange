@@ -2,6 +2,7 @@
 Pure-Python implementation of Lagrange interpolation over finite fields.
 """
 from __future__ import annotations
+from functools import reduce
 from typing import Union
 from collections.abc import Iterable, Sequence
 import doctest
@@ -13,7 +14,7 @@ def _inv(a, prime):
     return pow(a, prime - 2, prime)
 
 def interpolate(
-        points: Union[dict, Sequence[int], Iterable[Sequence[int]]], prime: int
+        points: Union[dict, Sequence[int], Iterable[Sequence[int]]], prime: int, degree=None
     ) -> int:
     # pylint: disable=R0912 # Accommodate large number of branches for type checking.
     """
@@ -70,6 +71,32 @@ def interpolate(
 
     >>> interpolate({(1, 15), (2, 9), (3, 3)}, 17)
     4
+
+    The library can handle interpolating from more points than necessary given the degree.
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, prime=65537)
+    2
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=4, prime=65537)
+    2
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=5, prime=65537)
+    Traceback (most recent call last):
+      ...
+    ValueError: not enough points for a unique interpolation
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=1, prime=65537)
+    2
+    >>> lagrange({49: 200, 5: 24, 3: 16}, degree=2, prime=65537)
+    4
+    >>> lagrange({49: 200, 5: 24, 3: 16}, degree=1, prime=65537)
+    4
+    >>> lagrange({1: 16, 2: 25, 3: 36}, degree=1, prime=65537)
+    7
+    >>> lagrange({3: 36, 1: 16, 2: 25}, degree=1, prime=65537)
+    6
+    >>> lagrange({1: 16, 2: 25, 3: 36}, degree=2, prime=65537)
+    9
+    >>> lagrange({3: 36, 1: 16, 2: 25}, degree=2, prime=65537)
+    9
+    >>> lagrange({5: 64, 2: 25, 3: 36}, degree=2, prime=65537)
+    9
 
     At least one point must be supplied.
 
@@ -158,19 +185,27 @@ sequences of integers
     if prime <= 1:
         raise ValueError('expecting a positive integer prime modulus')
 
-    # Compute the Lagrange coefficients at ``0``.
-    coefficients = {}
-    for i in range(1, len(values) + 1):
-        coefficients[i] = 1
-        for j in range(1, len(values) + 1):
-            if j != i:
-                coefficients[i] = (coefficients[i] * (0 - j) * _inv(i - j, prime)) % prime
+    degree = degree or len(points)-1
+    if len(values) <= degree:
+        raise ValueError('not enough points for a unique interpolation')
 
-    value = 0
-    for i in range(1, len(values) + 1):
-        value = (value + values[i] * coefficients[i]) % prime
+    # Field arithmetic helpers
+    mul = lambda a,b: (a % prime) * b % prime  # pylint: disable=C3001
+    div = lambda a,b: mul(a, _inv(b % prime, prime))  # pylint: disable=C3001
 
-    return value
+    # Restrict the set of points used in the interpolation.
+    domain = list(values.keys())[:degree + 1]
+
+    # Compute the value of each unique Lagrange basis polynomial at ``0``,
+    # then sum them all up to get the resulting value at ``0``.
+    return sum(
+        mul(values[x_value], reduce(mul, (
+            # Extrapolate given that y=1 if x=`x_value` and y=0 for other known x in domain.
+            div((0 - known_x), (x_value - known_x))
+            for known_x in domain if known_x is not x_value
+        )))
+        for x_value in domain
+    ) % prime
 
 lagrange = interpolate
 """
