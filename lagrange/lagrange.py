@@ -3,7 +3,7 @@ Pure-Python implementation of Lagrange interpolation over finite fields.
 """
 from __future__ import annotations
 from functools import reduce
-from typing import Union
+from typing import Union, Optional
 from collections.abc import Iterable, Sequence
 import doctest
 
@@ -14,7 +14,8 @@ def _inv(a, prime):
     return pow(a, prime - 2, prime)
 
 def interpolate(
-        points: Union[dict, Sequence[int], Iterable[Sequence[int]]], prime: int, degree=None
+        points: Union[dict, Sequence[int], Iterable[Sequence[int]]], prime: int,
+        degree: Optional[int] = None
     ) -> int:
     # pylint: disable=R0912 # Accommodate large number of branches for type checking.
     """
