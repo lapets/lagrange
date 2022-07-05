@@ -15,7 +15,7 @@ def _inv(a: int, prime: int) -> int:
 
 def interpolate(
         points: Union[dict, Sequence[int], Iterable[Sequence[int]]],
-        prime: int,
+        modulus: int,
         degree: Optional[int] = None
     ) -> int:
     # pylint: disable=R0912 # Accommodate large number of branches for type checking.
@@ -24,6 +24,10 @@ def interpolate(
     given a collection of points. The point information can be represented as
     a collection of two-component coordinates, as a dictionary, or as a sequence
     of values.
+
+    :param points: Collection of points to interpolate.
+    :param modulus: Modulus representing the finite field within which to interpolate.
+    :param degree: Degree of the target polynomial.
 
     >>> interpolate([(1, 15), (2, 9), (3, 3)], 17)
     4
@@ -77,34 +81,34 @@ def interpolate(
     This function is able to interpolate when supplied more points than
     necessary (*i.e.*, given the degree).
 
-    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, prime=65537)
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, modulus=65537)
     2
-    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=4, prime=65537)
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=4, modulus=65537)
     2
-    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=5, prime=65537)
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=5, modulus=65537)
     Traceback (most recent call last):
       ...
     ValueError: not enough points for a unique interpolation
-    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=1, prime=65537)
+    >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=1, modulus=65537)
     2
-    >>> lagrange({49: 200, 5: 24, 3: 16}, degree=2, prime=65537)
+    >>> lagrange({49: 200, 5: 24, 3: 16}, degree=2, modulus=65537)
     4
-    >>> lagrange({49: 200, 5: 24, 3: 16}, degree=1, prime=65537)
+    >>> lagrange({49: 200, 5: 24, 3: 16}, degree=1, modulus=65537)
     4
-    >>> lagrange({1: 16, 2: 25, 3: 36}, degree=1, prime=65537)
+    >>> lagrange({1: 16, 2: 25, 3: 36}, degree=1, modulus=65537)
     7
-    >>> lagrange({3: 36, 1: 16, 2: 25}, degree=1, prime=65537)
+    >>> lagrange({3: 36, 1: 16, 2: 25}, degree=1, modulus=65537)
     6
-    >>> lagrange({1: 16, 2: 25, 3: 36}, degree=2, prime=65537)
+    >>> lagrange({1: 16, 2: 25, 3: 36}, degree=2, modulus=65537)
     9
-    >>> lagrange({3: 36, 1: 16, 2: 25}, degree=2, prime=65537)
+    >>> lagrange({3: 36, 1: 16, 2: 25}, degree=2, modulus=65537)
     9
-    >>> lagrange({5: 64, 2: 25, 3: 36}, degree=2, prime=65537)
+    >>> lagrange({5: 64, 2: 25, 3: 36}, degree=2, modulus=65537)
     9
 
-    Interpolation in trivial cases is supported, as well.
+    Interpolation in trivial scenarios is supported, as well.
 
-    >>> lagrange([12345], degree=0, prime=65537)
+    >>> lagrange([12345], degree=0, modulus=65537)
     12345
 
     At least one point must be supplied.
@@ -196,10 +200,10 @@ sequences of integers
     if len(values) == 0:
         raise ValueError('at least one point is required')
 
-    if not isinstance(prime, int):
+    if not isinstance(modulus, int):
         raise TypeError('expecting an integer prime modulus')
 
-    if prime <= 1:
+    if modulus <= 1:
         raise ValueError('expecting a positive integer prime modulus')
 
     if degree is not None:
@@ -218,8 +222,8 @@ sequences of integers
     xs = list(values.keys())[:degree + 1] # pylint: disable=C0103
 
     # Field arithmetic helper functions.
-    mul = lambda a, b: (a % prime) * b % prime # pylint: disable=C3001
-    div = lambda a, b: mul(a, _inv(b, prime)) # pylint: disable=C3001
+    mul = lambda a, b: (a % modulus) * b % modulus # pylint: disable=C3001
+    div = lambda a, b: mul(a, _inv(b, modulus)) # pylint: disable=C3001
 
     # Compute the value of each unique Lagrange basis polynomial at ``0``,
     # then sum them all up to get the resulting value at ``0``.
@@ -239,7 +243,7 @@ sequences of integers
             )
         )
         for x in xs
-    ) % prime
+    ) % modulus
 
 lagrange = interpolate
 """
