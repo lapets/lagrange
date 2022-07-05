@@ -3,18 +3,19 @@ Pure-Python implementation of Lagrange interpolation over finite fields.
 """
 from __future__ import annotations
 from functools import reduce
-from typing import Union, Optional
-from collections.abc import Iterable, Sequence
+from typing import Union, Optional, Sequence, Iterable
+import collections.abc
 import doctest
 
-def _inv(a, prime):
+def _inv(a: int, prime: int) -> int:
     """
     Compute multiplicative inverse modulo a prime.
     """
     return pow(a, prime - 2, prime)
 
 def interpolate(
-        points: Union[dict, Sequence[int], Iterable[Sequence[int]]], prime: int,
+        points: Union[dict, Sequence[int], Iterable[Sequence[int]]],
+        prime: int,
         degree: Optional[int] = None
     ) -> int:
     # pylint: disable=R0912 # Accommodate large number of branches for type checking.
@@ -73,7 +74,9 @@ def interpolate(
     >>> interpolate({(1, 15), (2, 9), (3, 3)}, 17)
     4
 
-    The library can handle interpolating from more points than necessary given the degree.
+    This function is able to interpolate when supplied more points than
+    necessary (*i.e.*, given the degree).
+
     >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, prime=65537)
     2
     >>> lagrange({1: 4, 2: 6, 3: 8, 4: 10, 5: 12}, degree=4, prime=65537)
@@ -99,7 +102,8 @@ def interpolate(
     >>> lagrange({5: 64, 2: 25, 3: 36}, degree=2, prime=65537)
     9
 
-    Trivial interpolation is allowed as well.
+    Interpolation in trivial cases is supported, as well.
+
     >>> lagrange([12345], degree=0, prime=65537)
     12345
 
@@ -139,6 +143,14 @@ sequences of integers
     Traceback (most recent call last):
       ...
     ValueError: expecting a positive integer prime modulus
+    >>> interpolate([15, 9, 3], 17, 'abc')
+    Traceback (most recent call last):
+      ...
+    TypeError: expecting an integer degree
+    >>> interpolate([15, 9, 3], 17, -3)
+    Traceback (most recent call last):
+      ...
+    ValueError: expecting a nonnegative integer degree
     """
     values = None # Initially, assume that the supplied point data is not valid.
 
@@ -153,8 +165,8 @@ sequences of integers
 
         values = points # Valid representation.
 
-    elif isinstance(points, Iterable):
-        is_sequence = isinstance(points, Sequence) # In case iterable contains only integers.
+    elif isinstance(points, collections.abc.Iterable):
+        is_sequence = isinstance(points, collections.abc.Sequence) # If iterable contains integers.
         entries = list(points)
 
         if all(isinstance(e, int) for e in entries):
@@ -165,7 +177,7 @@ sequences of integers
 
             values = dict(zip(range(1, len(entries) + 1), entries)) # Valid representation.
 
-        elif all(isinstance(e, Sequence) for e in entries):
+        elif all(isinstance(e, collections.abc.Sequence) for e in entries):
             entries = [tuple(e) for e in entries]
             if not all(
                 len(e) == 2 and all(isinstance(c, int) for c in e)
@@ -190,26 +202,43 @@ sequences of integers
     if prime <= 1:
         raise ValueError('expecting a positive integer prime modulus')
 
-    degree = degree or len(points)-1
+    if degree is not None:
+        if not isinstance(degree, int):
+            raise TypeError('expecting an integer degree')
+
+        if degree < 0:
+            raise ValueError('expecting a nonnegative integer degree')
+
+    degree = degree or len(points) - 1
+
     if len(values) <= degree:
         raise ValueError('not enough points for a unique interpolation')
 
-    # Field arithmetic helpers
-    mul = lambda a,b: (a % prime) * b % prime  # pylint: disable=C3001
-    div = lambda a,b: mul(a, _inv(b % prime, prime))  # pylint: disable=C3001
-
     # Restrict the set of points used in the interpolation.
-    domain = list(values.keys())[:degree + 1]
+    xs = list(values.keys())[:degree + 1] # pylint: disable=C0103
+
+    # Field arithmetic helper functions.
+    mul = lambda a, b: (a % prime) * b % prime # pylint: disable=C3001
+    div = lambda a, b: mul(a, _inv(b, prime)) # pylint: disable=C3001
 
     # Compute the value of each unique Lagrange basis polynomial at ``0``,
     # then sum them all up to get the resulting value at ``0``.
     return sum(
-        mul(values[x_value], reduce(mul, (
-            # Extrapolate given that y=1 if x=`x_value` and y=0 for other known x in domain.
-            div((0 - known_x), (x_value - known_x))
-            for known_x in domain if known_x is not x_value
-        ), 1))
-        for x_value in domain
+        mul(
+            values[x],
+            reduce(
+                mul,
+                (
+                    # Extrapolate using the fact that *y* = ``1`` if
+                    # ``x`` = ``x_known``, and *y* = ``0`` for the other
+                    # known values in the domain.
+                    div(0 - x_known, x - x_known)
+                    for x_known in xs if x_known is not x
+                ),
+                1
+            )
+        )
+        for x in xs
     ) % prime
 
 lagrange = interpolate
@@ -217,5 +246,5 @@ lagrange = interpolate
 Alias for :obj:`interpolate`.
 """
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     doctest.testmod() # pragma: no cover
