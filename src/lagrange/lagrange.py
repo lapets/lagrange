@@ -4,8 +4,9 @@ Pure-Python implementation of Lagrange interpolation over finite fields.
 from __future__ import annotations
 from functools import reduce
 from typing import Union, Optional, Sequence, Iterable
-import collections.abc
 import doctest
+import collections.abc
+import itertools
 
 def _inv(a: int, prime: int) -> int:
     """
@@ -228,19 +229,16 @@ sequences of integers
     # Compute the value of each unique Lagrange basis polynomial at ``0``,
     # then sum them all up to get the resulting value at ``0``.
     return sum(
-        mul(
-            values[x],
-            reduce(
-                mul,
-                (
-                    # Extrapolate using the fact that *y* = ``1`` if
-                    # ``x`` = ``x_known``, and *y* = ``0`` for the other
-                    # known values in the domain.
-                    div(0 - x_known, x - x_known)
-                    for x_known in xs if x_known is not x
-                ),
-                1
-            )
+        reduce(
+            mul,
+            itertools.chain([values[x]], (
+                # Extrapolate using the fact that *y* = ``1`` if
+                # ``x`` = ``x_known``, and *y* = ``0`` for the other
+                # known values in the domain.
+                div(0 - x_known, x - x_known)
+                for x_known in xs if x_known is not x
+            )),
+            1
         )
         for x in xs
     ) % modulus
