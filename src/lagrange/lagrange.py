@@ -19,7 +19,6 @@ def interpolate(
         modulus: int,
         degree: Optional[int] = None
     ) -> int:
-    # pylint: disable=R0912 # Accommodate large number of branches for type checking.
     """
     Determine the value at the origin of the domain (*e.g.*, where *x* = 0)
     given a collection of points. The point information can be represented as
@@ -157,6 +156,7 @@ sequences of integers
       ...
     ValueError: expecting a nonnegative integer degree
     """
+    # pylint: disable=too-many-branches # Allow large number of branches for type checking.
     values = None # Initially, assume that the supplied point data is not valid.
 
     if isinstance(points, dict):
@@ -220,11 +220,11 @@ sequences of integers
         raise ValueError('not enough points for a unique interpolation')
 
     # Restrict the set of points used in the interpolation.
-    xs = list(values.keys())[:degree + 1] # pylint: disable=C0103
+    xs = list(values.keys())[:degree + 1]
 
     # Field arithmetic helper functions.
-    mul = lambda a, b: (a % modulus) * b % modulus # pylint: disable=C3001
-    div = lambda a, b: mul(a, _inv(b, modulus)) # pylint: disable=C3001
+    mul = lambda a, b: (a % modulus) * b % modulus # pylint: disable=unnecessary-lambda-assignment
+    div = lambda a, b: mul(a, _inv(b, modulus)) # pylint: disable=unnecessary-lambda-assignment
 
     # Compute the value of each unique Lagrange basis polynomial at ``0``,
     # then sum them all up to get the resulting value at ``0``.
