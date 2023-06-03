@@ -2,10 +2,10 @@
 Pure-Python implementation of Lagrange interpolation over finite fields.
 """
 from __future__ import annotations
-from functools import reduce
 from typing import Union, Optional, Sequence, Iterable
 import doctest
 import collections.abc
+import functools
 import itertools
 
 def _inv(a: int, prime: int) -> int:
@@ -229,7 +229,7 @@ sequences of integers
     # Compute the value of each unique Lagrange basis polynomial at ``0``,
     # then sum them all up to get the resulting value at ``0``.
     return sum(
-        reduce(
+        functools.reduce(
             mul,
             itertools.chain([values[x]], (
                 # Extrapolate using the fact that *y* = ``1`` if
