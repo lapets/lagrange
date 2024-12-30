@@ -1,5 +1,6 @@
 """
-Pure-Python implementation of Lagrange interpolation over finite fields.
+Pure-Python implementation of `Lagrange interpolation \
+<https://en.wikipedia.org/wiki/Lagrange_polynomial>`__ over finite fields.
 """
 from __future__ import annotations
 from typing import Union, Optional, Sequence, Iterable
@@ -129,12 +130,12 @@ def interpolate(
     Traceback (most recent call last):
       ...
     TypeError: iterable that represents points must contain integers or two-element \
-sequences of integers
+sequences thereof
     >>> interpolate('abc', 123)
     Traceback (most recent call last):
       ...
     TypeError: iterable that represents points must contain integers or two-element \
-sequences of integers
+sequences thereof
     >>> interpolate(1.23, 123)
     Traceback (most recent call last):
       ...
@@ -190,7 +191,7 @@ sequences of integers
             ):
                 raise TypeError(
                     'iterable that represents points must contain integers ' + \
-                    'or two-element sequences of integers'
+                    'or two-element sequences thereof'
                 )
 
             values = dict(entries) # Valid representation.
