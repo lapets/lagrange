@@ -9,12 +9,6 @@ import collections.abc
 import functools
 import itertools
 
-def _inv(a: int, prime: int) -> int:
-    """
-    Compute multiplicative inverse modulo a prime.
-    """
-    return pow(a, prime - 2, prime)
-
 def interpolate(
         points: Union[dict, Sequence[int], Iterable[Sequence[int]]],
         modulus: int,
@@ -22,13 +16,14 @@ def interpolate(
     ) -> int:
     """
     Determine the value at the origin of the domain (*e.g.*, where *x* = 0)
-    given a collection of points. The point information can be represented as
-    a collection of two-component coordinates, as a dictionary, or as a sequence
-    of values.
+    given a collection of points.
 
     :param points: Collection of points to interpolate.
     :param modulus: Modulus representing the finite field within which to interpolate.
     :param degree: Degree of the target polynomial.
+
+    The point information can be represented as a collection of two-component
+    coordinates, as a dictionary, or as a sequence of values.
 
     >>> interpolate([(1, 15), (2, 9), (3, 3)], 17)
     4
@@ -158,6 +153,7 @@ sequences thereof
     ValueError: expecting a nonnegative integer degree
     """
     # pylint: disable=too-many-branches # Allow large number of branches for type checking.
+    # pylint: disable=unnecessary-lambda-assignment # Allow small local functions.
     values = None # Initially, assume that the supplied point data is not valid.
 
     if isinstance(points, dict):
@@ -224,8 +220,9 @@ sequences thereof
     xs = list(values.keys())[:degree + 1]
 
     # Field arithmetic helper functions.
-    mul = lambda a, b: (a % modulus) * b % modulus # pylint: disable=unnecessary-lambda-assignment
-    div = lambda a, b: mul(a, _inv(b, modulus)) # pylint: disable=unnecessary-lambda-assignment
+    inv = lambda a, p: pow(a, p - 2, p)
+    mul = lambda a, b: ((a % modulus) * b) % modulus
+    div = lambda a, b: mul(a, inv(b, modulus))
 
     # Compute the value of each unique Lagrange basis polynomial at ``0``,
     # then sum them all up to get the resulting value at ``0``.
