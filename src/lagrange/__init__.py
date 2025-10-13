@@ -1,2 +1,2 @@
-"""Allow users to access the function directly."""
+"""Allow users to access the functions directly."""
 from lagrange.lagrange import lagrange, interpolate
