@@ -1,6 +1,6 @@
 [project]
 name = "lagrange"
-version = "4.0.0"
+version = "4.0.1"
 description = """\
     Pure-Python implementation of Lagrange \
     interpolation over finite fields.\
